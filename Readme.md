@@ -1,5 +1,4 @@
 
------
 
 # 🔓 Unbolt Protocol: Programmable Liquidity for the Global Workforce
 
