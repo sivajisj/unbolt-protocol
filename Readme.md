@@ -83,13 +83,4 @@ npm run dev
 
 This project is licensed under the **MIT License**.
 
------
 
-### **Why this README works:**
-
-1.  **Visual Proof:** Includes badges and a clear hierarchy.
-2.  **Scannability:** Judges can see your features and tech stack in 10 seconds.
-3.  **Modern Tech:** Explicitly mentions **Transfer Hooks**, **Blinks**, and **elizaOS**.
-4.  **Professionalism:** It includes a Quick Start and Security section, which shows you are building a product, not just a demo.
-
-**Do you want me to help you generate a `CONTRIBUTING.md` or a `ARCHITECTURE.md` file to go with this?**
