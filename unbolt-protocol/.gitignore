@@ -1,0 +1,92 @@
+
+# Dependencies
+node_modules/
+.pnp/
+.pnp.js
+
+# Build outputs
+dist/
+build/
+.target/
+*.so
+*.dll
+*.dylib
+
+# Anchor / Rust
+target/
+**/target/
+**/programs/**/target/
+**/tests/**/target/
+**/target/idl/
+**/target/types/
+
+# Solana
+**/test-ledger/
+**/ledger/
+**/programs/
+.docker/ledger/
+.docker/programs/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+*.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+bun-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Next.js
+.next/
+out/
+build/
+
+# Testing
+coverage/
+.nyc_output/
+
+# Docker
+docker/ledger/
+docker/programs/
+
+# Keypairs (IMPORTANT: Never commit private keys)
+*.json
+!package.json
+!tsconfig.json
+!idl/*.json
+!target/idl/*.json
+!target/types/*.json
+!*.config.json
+!*rc.json
+
+# Anchor specific
+**/anchor.lock
+**/programs/**/Cargo.lock
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# Local Netlify folder
+.netlify/
+
+# Turbopack
+.turbopack/
