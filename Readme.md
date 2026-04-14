@@ -11,6 +11,7 @@
 -----
 
 ## 🚀 The Vision
+bun add @solana/wallet-adapter-phantom
 
 In 2026, labor is instant, but capital is delayed. Unbolt bridges this gap by making "Time" programmable. By leveraging **Solana Token Extensions**, we ensure that credit is as fluid as the work that generates it.
 

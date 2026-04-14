@@ -1,0 +1,80 @@
+version: '3.8'
+
+services:
+  solana-validator:
+    image: solanalabs/solana:beta
+    container_name: unbolt-solana-validator
+    command: >
+      solana-test-validator
+      --reset
+      --quiet
+      --ledger /ledger
+      --bind-address 0.0.0.0
+      --rpc-port 8899
+    ports:
+      - "8899:8899"
+      - "8900:8900"
+      - "8901:8901"
+    volumes:
+      - ./docker/ledger:/ledger
+      - ./docker/programs:/programs
+    environment:
+      - RUST_LOG=solana_runtime::message_processor=debug
+    healthcheck:
+      test: ["CMD", "solana", "cluster-version", "--url", "http://localhost:8899"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  setup-validator:
+    image: solanalabs/solana:beta
+    container_name: unbolt-setup
+    depends_on:
+      solana-validator:
+        condition: service_healthy
+    entrypoint: |
+      bash -c "
+        # Wait for validator
+        sleep 3
+        
+        # Configure Solana CLI
+        solana config set --url http://solana-validator:8899
+        
+        # Create test wallet
+        solana-keygen new --no-passphrase -o /programs/test-wallet.json
+        
+        # Airdrop SOL to test wallet
+        solana airdrop 100 /programs/test-wallet.json
+        
+        # Create custom USDC mint with Token-2022
+        TOKEN_2022_PROGRAM_ID=TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb
+        
+        # Create mint account
+        USDC_MINT_KEYPAIR=/programs/usdc-mint.json
+        solana-keygen new --no-passphrase -o $$USDC_MINT_KEYPAIR
+        
+        # Initialize Token-2022 mint
+        spl-token --program-id $$TOKEN_2022_PROGRAM_ID create-token $$USDC_MINT_KEYPAIR --decimals 6
+        
+        # Get mint address
+        USDC_MINT_ADDRESS=$$(solana-keygen pubkey $$USDC_MINT_KEYPAIR)
+        
+        # Create associated token account for test wallet
+        TEST_WALLET=$$(solana-keygen pubkey /programs/test-wallet.json)
+        spl-token --program-id $$TOKEN_2022_PROGRAM_ID create-account $$USDC_MINT_ADDRESS --owner $$TEST_WALLET
+        
+        # Mint 1,000,000 USDC
+        spl-token --program-id $$TOKEN_2022_PROGRAM_ID mint $$USDC_MINT_ADDRESS 1000000000 --owner /programs/test-wallet.json
+        
+        # Save config for Next.js
+        echo '{\"USDC_MINT\": \"'$$USDC_MINT_ADDRESS'\", \"RPC_ENDPOINT\": \"http://localhost:8899\"}' > /programs/config.json
+        
+        echo '=== Setup Complete ==='
+        echo 'USDC Mint:' $$USDC_MINT_ADDRESS
+        echo 'Test Wallet:' $$TEST_WALLET
+        
+        # Keep container alive
+        tail -f /dev/null
+      "
+    volumes:
+      - ./docker/programs:/programs
