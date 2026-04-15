@@ -89,3 +89,4 @@ docker/programs/
 
 # Turbopack
 .turbopack/
+!web/idl/*.json
