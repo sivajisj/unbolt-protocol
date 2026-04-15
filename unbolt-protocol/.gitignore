@@ -23,7 +23,6 @@ target/
 # Solana
 **/test-ledger/
 **/ledger/
-**/programs/
 .docker/ledger/
 .docker/programs/
 
