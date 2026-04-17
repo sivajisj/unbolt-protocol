@@ -2,7 +2,7 @@ use anchor_lang::prelude::*;
 use anchor_spl::token_2022::{self, Token2022, TransferChecked};
 use anchor_spl::token_interface::{Mint, TokenAccount};
 
-declare_id!("BwkEjgnMoZe6xf99NyLYgqRn6AtPifG962BPgjybD3R2"); // Replace after `anchor keys list`
+declare_id!("3bAYPYRFc3Dnc9AUnkJoYycckBTHzXStZRWnJxkok9Jz"); // Replace after `anchor keys list`
 
 #[program]
 pub mod unbolt {

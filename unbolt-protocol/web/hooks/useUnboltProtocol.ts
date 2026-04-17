@@ -1,4 +1,5 @@
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
 import { PublicKey, Transaction } from "@solana/web3.js";
 import { getAssociatedTokenAddress, TOKEN_2022_PROGRAM_ID } from "@solana/spl-token";
@@ -16,18 +17,17 @@ export function useUnboltProtocol() {
     setLoading(true);
     try {
       const program = getProgram(connection, wallet);
-      const [userDebtPDA] = await findUserDebtPDA(wallet.publicKey);
+      const userDebtPDA = findUserDebtPDA(wallet.publicKey);
       
-      const tx = await program.methods
+      const signature = await program.methods
         .initializeUserDebtAccount()
         .accounts({
           user: wallet.publicKey,
           userDebtAccount: userDebtPDA,
           systemProgram: anchor.web3.SystemProgram.programId,
-        })
-        .transaction();
+        } as any)
+        .rpc();
       
-      const signature = await wallet.sendTransaction(tx, connection);
       await connection.confirmTransaction(signature);
       
       return { signature, userDebtPDA };
@@ -42,7 +42,7 @@ export function useUnboltProtocol() {
     setLoading(true);
     try {
       const program = getProgram(connection, wallet);
-      const [userDebtPDA] = await findUserDebtPDA(wallet.publicKey);
+      const userDebtPDA = findUserDebtPDA(wallet.publicKey);
       const globalConfigPDA = findGlobalConfigPDA();
       
       // Get user's token account
@@ -56,7 +56,7 @@ export function useUnboltProtocol() {
       // Get vault token account (you'll need to set this)
       const vaultTokenAccount = new PublicKey(process.env.NEXT_PUBLIC_VAULT_TOKEN_ACCOUNT!);
       
-      const tx = await program.methods
+      const signature = await program.methods
         .initiateLoan(new anchor.BN(borrowAmount), new anchor.BN(durationSeconds))
         .accounts({
           user: wallet.publicKey,
@@ -67,10 +67,9 @@ export function useUnboltProtocol() {
           vaultAuthority: new PublicKey(process.env.NEXT_PUBLIC_VAULT_AUTHORITY!),
           usdcMint: USDC_MINT,
           token2022Program: TOKEN_2022_PROGRAM_ID,
-        })
-        .transaction();
+        } as any)
+        .rpc();
       
-      const signature = await wallet.sendTransaction(tx, connection);
       await connection.confirmTransaction(signature);
       
       return { signature };
@@ -85,7 +84,7 @@ export function useUnboltProtocol() {
     setLoading(true);
     try {
       const program = getProgram(connection, wallet);
-      const [userDebtPDA] = await findUserDebtPDA(wallet.publicKey);
+      const userDebtPDA = findUserDebtPDA(wallet.publicKey);
       const globalConfigPDA = findGlobalConfigPDA();
       
       const userTokenAccount = await getAssociatedTokenAddress(
@@ -97,7 +96,7 @@ export function useUnboltProtocol() {
       
       const vaultTokenAccount = new PublicKey(process.env.NEXT_PUBLIC_VAULT_TOKEN_ACCOUNT!);
       
-      const tx = await program.methods
+      const signature = await program.methods
         .processRepaymentStream()
         .accounts({
           user: wallet.publicKey,
@@ -107,10 +106,9 @@ export function useUnboltProtocol() {
           userTokenAccount: userTokenAccount,
           usdcMint: USDC_MINT,
           token2022Program: TOKEN_2022_PROGRAM_ID,
-        })
-        .transaction();
+        } as any)
+        .rpc();
       
-      const signature = await wallet.sendTransaction(tx, connection);
       await connection.confirmTransaction(signature);
       
       return { signature };
@@ -124,7 +122,7 @@ export function useUnboltProtocol() {
     
     try {
       const program = getProgram(connection, wallet);
-      const [userDebtPDA] = await findUserDebtPDA(wallet.publicKey);
+      const userDebtPDA = findUserDebtPDA(wallet.publicKey);
       
       const account = await program.account.userDebtAccount.fetch(userDebtPDA);
       return account;

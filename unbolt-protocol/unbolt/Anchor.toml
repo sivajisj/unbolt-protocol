@@ -8,7 +8,7 @@ seeds = true
 
 
 [programs.localnet]
-unbolt = "BwkEjgnMoZe6xf99NyLYgqRn6AtPifG962BPgjybD3R2"
+unbolt = "3bAYPYRFc3Dnc9AUnkJoYycckBTHzXStZRWnJxkok9Jz"
 
 [registry]
 url = "https://api.apr.dev"

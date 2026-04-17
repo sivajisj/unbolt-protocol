@@ -1,6 +1,7 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  webpack: (config, { isServer }) => {
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
+  webpack: (config: any, { isServer }: { isServer: boolean }) => {
     if (!isServer) {
       // Polyfill for web3.js browser compatibility
       config.resolve.fallback = {
