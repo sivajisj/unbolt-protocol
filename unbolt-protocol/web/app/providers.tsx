@@ -26,11 +26,7 @@ function WalletStyles() {
 
 export const Providers: FC<Props> = ({ children }) => {
   const endpoint = useMemo(() => {
-    // Use local validator if available, fallback to devnet
-    if (process.env.NEXT_PUBLIC_RPC_ENDPOINT) {
-      return process.env.NEXT_PUBLIC_RPC_ENDPOINT;
-    }
-    return clusterApiUrl('devnet');
+    return "http://127.0.0.1:8899";
   }, []);
 
   const wallets = useMemo(

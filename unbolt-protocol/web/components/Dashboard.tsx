@@ -13,12 +13,17 @@ export function Dashboard() {
   const { fetchUserDebtAccount, initializeUserDebtAccount, loading } = useUnboltProtocol();
   const [debtAccount, setDebtAccount] = useState<any>(null);
   const [hasAccount, setHasAccount] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    if (connected && publicKey) {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (mounted && connected && publicKey) {
       loadDebtAccount();
     }
-  }, [connected, publicKey]);
+  }, [mounted, connected, publicKey]);
 
   const loadDebtAccount = async () => {
     const account = await fetchUserDebtAccount();
@@ -36,6 +41,8 @@ export function Dashboard() {
       console.error("Failed to initialize:", error);
     }
   };
+
+  if (!mounted) return null;
 
   if (!connected) {
     return (
